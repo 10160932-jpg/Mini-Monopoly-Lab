@@ -1,24 +1,95 @@
 screen_precision = 0
 console_precision = 0
-FWD = Event()
-LT = Event()
-RT = Event()
 myVariable = 0
 dice1 = 0
 dice2 = 0
 spaces_to_move = 0
 current_space_number = 0
+FWD = Event()
+LT = Event()
+RT = Event()
+move_foward = Event()
+right_turn = Event()
+left_turn = Event()
 
-def play_game():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
-    while True:
-        roll_dice()
-        move()
-        complete_task()
+def move():
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
+    brain.screen.print(str("Moving ") + str(str(spaces_to_move) + str("spaces!")))
+    for repeat_count in range(int(current_space_number)):
+        move_foward.broadcast_and_wait()
+        current_space_number = current_space_number + 1
+        if current_space_number > 12:
+            current_space_number = 1
         wait(5, MSEC)
+    if current_space_number == 1:
+        right_turn.broadcast_and_wait()
+    if current_space_number == 4:
+        right_turn.broadcast_and_wait()
+    if current_space_number == 7:
+        right_turn.broadcast_and_wait()
+    if current_space_number == 10:
+        right_turn.broadcast_and_wait()
+
+def complete_task():
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
+    brain.screen.print(str("Landed on space") + str(current_space_number))
+    brain.screen.next_row()
+    wait(1, SECONDS)
+    if 0 == 50:
+        # Space = Go
+        pass
+    elif 0 == 50:
+        # Space = Jail
+        pass
+    elif 0 == 50:
+        # Space = Free Parking
+        pass
+    elif 0 == 50:
+        # Space + Go to Jail
+        pass
+    else:
+        # Space = Blue1 or 2, Green 1 or 2, Yellow 1 or 2, or Red 1 or 2
+        pass
+    if current_space_number == 1:
+        # Space = Go
+        for repeat_count2 in range(4):
+            left_turn.broadcast_and_wait()
+            wait(5, MSEC)
+    elif current_space_number == 4:
+        # Space = Jail
+        wait(3, SECONDS)
+    elif current_space_number == 7:
+        # Space = Free Parking
+        wait(5, SECONDS)
+    elif current_space_number == 10:
+        # space = Go to Jail
+        right_turn.broadcast_and_wait()
+        for repeat_count3 in range(3):
+            move_foward.broadcast_and_wait()
+            wait(5, MSEC)
+        left_turn.broadcast_and_wait()
+        for repeat_count4 in range(3):
+            move_foward.broadcast_and_wait()
+            wait(5, MSEC)
+        for repeat_count5 in range(2):
+            right_turn.broadcast_and_wait()
+            wait(5, MSEC)
+        for repeat_count6 in range(10):
+            current_space_number = 4
+            wait(1, SECONDS)
+            wait(5, MSEC)
+    else:
+        # space = Blue 1 or 2, Green 1 or 2, Yellow 1 or 2, or Red 1 or 2
+        right_turn.broadcast_and_wait()
+        move_foward.broadcast_and_wait()
+        for repeat_count7 in range(2):
+            left_turn.broadcast_and_wait()
+            wait(5, MSEC)
+        move_foward.broadcast_and_wait()
+        right_turn.broadcast_and_wait()
 
 def roll_dice():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     dice1 = int(round(urandom.uniform(1, 4), 2))
     brain.screen.print(str("rolled a:") + str(dice1))
     brain.screen.next_row()
@@ -27,47 +98,45 @@ def roll_dice():
     brain.screen.next_row()
     spaces_to_move = dice1 + dice2
 
-def complete_task():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
-    pass
-
-def move():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
-    brain.screen.print(str("Moving ") + str(str(spaces_to_move) + str("spaces!")))
-    for repeat_count in range(int(current_space_number)):
+def play_game():
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
+    while True:
+        roll_dice()
+        move()
+        complete_task()
         wait(5, MSEC)
 
 def when_started1():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     current_space_number = 1
     play_game()
 
 def FWD_callback_0():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     pass
 
 def FWD_callback_1():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     pass
 
 def when_started2():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     pass
 
 def RT_callback_0():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     pass
 
 def RT_callback_1():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     pass
 
 def LT_callback_0():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     pass
 
 def LT_callback_1():
-    global FWD, LT, RT, my_event, myVariable, dice1, dice2, spaces_to_move, current_space_number, screen_precision, console_precision
+    global myVariable, dice1, dice2, spaces_to_move, current_space_number, FWD, LT, RT, move_foward, right_turn, left_turn, my_event, screen_precision, console_precision
     pass
 
 # system event handlers
